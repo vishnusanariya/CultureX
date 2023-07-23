@@ -12,7 +12,7 @@ const multer = require("multer");
 const ConnectToDb = require("./db");
 const Media = require("./models/mediaSchema");
 const User = require("./models/userSchema");
-
+const fs = require("fs");
 ConnectToDb();
 
 app.use(
@@ -38,5 +38,39 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", userRoute);
 app.use("/media",require('./routes/fileRoutes'))
+app.get("/video/:filename", (req, res) => {
+  const fileName=req.params.filename;
+  const videoPath=`uploads/${fileName}`;
+  if(!videoPath){
+    res.status(404);
+    throw new Error(`Video:${fileName} not found`);
+
+  }
+  const stat=fs.statSync(videoPath);
+  const filesize=stat.size;
+  const range=req.headers.range;
+  if(range){
+    const parts=range.replace(/bytes=/,'').split('-');
+    const start=parseInt(parts[0],10);
+    const end=parts[1]?parseInt(parts[1],10):filesize-1;
+    const chunkSize=end-start+1;
+    const file= fs.createReadStream(videoPath,{start,end})
+    const head={
+      'Content-Range':`bytes ${start}-${end}/${filesize}`,
+      'Accept-Ranges':'bytes',
+      'Content-Length':chunkSize,
+      'Content-Type':'video/mp4'
+    };
+    res.writeHead(206,head);
+    file.pipe(res);
+  }else{
+    const head={
+      'Content-Length':filesize,
+      'Content-Type':'video/mp4'
+    };
+    res.writeHead(200,head);
+    fs.createReadStream(videoPath).pipe(res)
+  }
+});
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listenting on port ${port}...`));

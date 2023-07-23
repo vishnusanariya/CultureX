@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Upload from "../Upload/Upload";
+
 import "./Home.css";
+import VideoPlayer from "../../Components/VideoPlayer";
 const Home = (props) => {
   const [data, setData] = useState([]);
+  const [videoId, setVideoId] = useState(null);
   const user = props.user;
-  // console.log(user);
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -23,14 +25,15 @@ const Home = (props) => {
   const logout = () => {
     window.open("http://localhost:5000/auth/logout", "_self");
   };
+  const playVideo = (e,videoId) => {
+    e.preventDefault();
+    setVideoId(videoId);
+  }
   const renderFiles = () => {
     return data.map((item) => {
       if (item.type.startsWith("image")) {
         return (
           <div key={item._id} className="media-item-image">
-            <div className="item-type">
-              <p>Type: {item.type}</p>
-            </div>
             <div className="item-content">
               <img
                 src={`http://localhost:5000/media/${item.fileName}`}
@@ -42,20 +45,10 @@ const Home = (props) => {
         );
       } else if (item.type.startsWith("video")) {
         return (
-          <div key={item._id} className="media-item-video">
-            <div className="item-type">
-              <p>Type: {item.type}</p>
-            </div>
-            <div className="item-content">
-              <video controls autoPlay>
-                <source
-                  src={`http://localhost:5000/media/${item.fileName}`}
-                  type={item.type}
-                />
-                
-                Your browser does not support the video tag.
-              </video>
-            </div>
+          <div className="video-type">
+          <VideoPlayer videoId={item.fileName}/>
+          {/* {videoId && <VideoPlayer videoId={videoId}/>}<br/> */}
+          {/* <button onClick={(e)=>{playVideo(e,item.fileName)}}>Play video</button> */}
           </div>
         );
       } else {
