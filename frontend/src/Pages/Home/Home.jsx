@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Upload from "../Upload/Upload";
+import Upload from "./Components/Upload";
 
 import "./Home.css";
 import VideoPlayer from "../../Components/VideoPlayer";
 const Home = (props) => {
   const [data, setData] = useState([]);
-  const [videoId, setVideoId] = useState(null);
   const user = props.user;
   const fetchData = async () => {
     try {
@@ -25,10 +24,6 @@ const Home = (props) => {
   const logout = () => {
     window.open("http://localhost:5000/auth/logout", "_self");
   };
-  const playVideo = (e,videoId) => {
-    e.preventDefault();
-    setVideoId(videoId);
-  }
   const renderFiles = () => {
     return data.map((item) => {
       if (item.type.startsWith("image")) {
@@ -45,10 +40,8 @@ const Home = (props) => {
         );
       } else if (item.type.startsWith("video")) {
         return (
-          <div className="video-type">
-          <VideoPlayer videoId={item.fileName}/>
-          {/* {videoId && <VideoPlayer videoId={videoId}/>}<br/> */}
-          {/* <button onClick={(e)=>{playVideo(e,item.fileName)}}>Play video</button> */}
+          <div className="video-type" key={item._id}>
+              <VideoPlayer videoId={item.fileName} />
           </div>
         );
       } else {
@@ -65,13 +58,15 @@ const Home = (props) => {
   };
   return (
     <>
-      <div>
+      <button className="logout-btn" onClick={logout}>
+        Logout
+      </button>
+      <div className="container">
         <div className="upload">
-          <Upload user={user} />
+          <Upload user={user} fetchData={fetchData} />
         </div>
         <h2>Uploaded items</h2>
         <div className="media-container">{renderFiles()}</div>
-        <button onClick={logout}>Logout</button>
       </div>
     </>
   );

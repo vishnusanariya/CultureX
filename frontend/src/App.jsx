@@ -8,14 +8,11 @@ import Home from "./Pages/Home/Home";
 
 function App() {
   const [user, setUser] = useState(null);
-  let username;
   const getUser = async () => {
     try {
       const url = "http://localhost:5000/auth/login/success";
       axios.get(url, { withCredentials: true })
       .then((res)=>{
-        // setUser(res.)
-        // console.log(res.data.user.emails[0].value);
         setUser({displayName: res.data.user.displayName, email: res.data.user.emails[0].value});
       }).catch((err)=>{console.log(err)});
     } catch (err) {
@@ -25,7 +22,6 @@ function App() {
   useEffect(() => {
     getUser();
   }, []);
-  console.log("user:",user)
   return (
     <>
       <Routes>

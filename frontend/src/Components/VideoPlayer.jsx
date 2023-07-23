@@ -11,7 +11,7 @@ const VideoPlayer = ({ videoId }) => {
   });
   return (
     <video ref={videoRef} width={320} height="240" controls autoPlay>
-      <source src={`http://localhost:5000/video/${videoId}`}></source>
+      <source src={`http://localhost:5000/media/video/${videoId}`}></source>
       Your browser doesn't support video tag
     </video>
   );
