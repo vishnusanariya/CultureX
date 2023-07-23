@@ -5,7 +5,6 @@ import NoPage from "./Components/NoPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Home from "./Pages/Home/Home";
-import Login from "./Pages/Login/Login";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,8 +15,8 @@ function App() {
       axios.get(url, { withCredentials: true })
       .then((res)=>{
         // setUser(res.)
-        // console.log(res.data.user);
-        setUser(res.data.user.displayName);
+        // console.log(res.data.user.emails[0].value);
+        setUser({displayName: res.data.user.displayName, email: res.data.user.emails[0].value});
       }).catch((err)=>{console.log(err)});
     } catch (err) {
       console.error(err);
@@ -25,26 +24,25 @@ function App() {
   };
   useEffect(() => {
     getUser();
-  }, [user]);
+  }, []);
   console.log("user:",user)
   return (
     <>
-      <h2>User:{username}</h2>
       <Routes>
         <Route
           exact
           path="/"
-          element={user ? <Home user={user} /> : <Navigate to="/login" />}
+          element={user ? <Home user={user} /> : <Landing/>}
         />
         <Route
           exact
           path="/login"
-          element={user ? <Navigate to="/" /> : <Login />}
+          element={user ? <Navigate to="/" /> : <Landing />}
         />
         <Route
           exact
           path="/signup"
-          element={user ? <Navigate to="/" /> : <Login />}
+          element={user ? <Navigate to="/" /> : <Landing />}
         />
         <Route path="*" element={<NoPage/>}/>
       </Routes>

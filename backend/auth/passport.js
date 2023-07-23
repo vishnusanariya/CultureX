@@ -1,5 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const User= require('../models/userSchema');
+const findOrCreate = require('mongoose-findorcreate');
 require('dotenv').config();
 passport.use(
 	new GoogleStrategy(
@@ -10,7 +12,11 @@ passport.use(
 			scope: ["profile", "email"],
 		},
 		function (accessToken, refreshToken, profile, callback) {
-			callback(null, profile);
+			// console.log('profile',profile);
+			User.findOrCreate({email: profile._json.email,displayName:profile._json.name}).then((res)=>{
+				// console.log('prof res:',res);
+				callback(null, profile);
+			})
 		}
 	)
 );
