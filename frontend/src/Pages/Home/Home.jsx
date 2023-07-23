@@ -47,7 +47,7 @@ const Home = (props) => {
               <p>Type: {item.type}</p>
             </div>
             <div className="item-content">
-              <video controls>
+              <video controls autoPlay>
                 <source
                   src={`http://localhost:5000/media/${item.fileName}`}
                   type={item.type}
@@ -76,6 +76,7 @@ const Home = (props) => {
         <div className="upload">
           <Upload user={user} />
         </div>
+        <h2>Uploaded items</h2>
         <div className="media-container">{renderFiles()}</div>
         <button onClick={logout}>Logout</button>
       </div>

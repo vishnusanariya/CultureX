@@ -60,22 +60,29 @@ router.get(
     }
   })
 );
+// router.get('/video/:name',asyncHandler(async (req, res) => {
+
+// }))
 router.use(express.static("uploads"));
 router.get(
   "/:name",
   asyncHandler(async (req, res) => {
+    console.log("get media");
     try {
       const file = await Media.findOne({ fileName: req.params.name });
-      console.log("file info:",file,req.params.name)
+      console.log("file info:", file, req.params.name);
       if (file.type.startsWith("image")) {
         const ff = fs.readFile(`/uploads/${file.fileName}`);
         res.send(ff);
       } else if (file.type.startsWith("video")) {
         const range = req.headers.range;
-        console.log(range)
-        const videoPath = `/uploads/${file.fileName}`;
+        if (!range) res.status(400).send("error");
+
+        const videoPath = "test.mp4";
         const videoSize = fs.statSync(videoPath).size;
-        const chunkSize = 1 * 1e6;
+
+        const chunkSize = 10 ** 6;
+        // bytes=64165
         const start = Number(range.replace(/\D/g, ""));
         const end = Math.min(start + chunkSize, videoSize - 1);
         const contentLength = end - start + 1;
@@ -85,19 +92,17 @@ router.get(
           "Content-Length": contentLength,
           "Content-Type": "video/mp4",
         };
+
         res.writeHead(206, headers);
-        const stream = fs.createReadStream(videoPath, {
-          start,
-          end,
-        });
-        stream.pipe(res);
-      } else {
-        res.status(404);
-        throw new Error("file not found");
+
+        const videoStream = fs.createReadStream(videoPath, { start, end });
+
+        videoStream.pipe(res);
       }
     } catch (err) {
       console.error(err);
     }
   })
 );
+
 module.exports = router;
