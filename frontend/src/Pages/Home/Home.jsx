@@ -10,7 +10,7 @@ const Home = (props) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/media/files/${user.email}`
+        `https://culture-x-server.vercel.app/media/files/${user.email}`
       );
       console.log(response);
       setData(response.data);
@@ -22,7 +22,7 @@ const Home = (props) => {
     fetchData();
   }, []);
   const logout = () => {
-    window.open("http://localhost:5000/auth/logout", "_self");
+    window.open("https://culture-x-server.vercel.app/auth/logout", "_self");
   };
   const renderFiles = () => {
     return data.map((item) => {
@@ -31,7 +31,7 @@ const Home = (props) => {
           <div key={item._id} className="media-item-image">
             <div className="item-content">
               <img
-                src={`http://localhost:5000/media/${item.fileName}`}
+                src={`https://culture-x-server.vercel.app/media/${item.fileName}`}
                 alt={item.fileName}
                 className="media-image"
               />

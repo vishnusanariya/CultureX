@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const Landing = () => {
     const handleAuth=() => {
-      window.open("http://localhost:5000/auth/google/callback","_self")
+      window.open("https://culture-x-server.vercel.app/auth/google/callback","_self")
   }
     return (
     <>

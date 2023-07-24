@@ -10,7 +10,7 @@ function App() {
   const [user, setUser] = useState(null);
   const getUser = async () => {
     try {
-      const url = "http://localhost:5000/auth/login/success";
+      const url = "https://culture-x-server.vercel.app/auth/login/success";
       axios.get(url, { withCredentials: true })
       .then((res)=>{
         setUser({displayName: res.data.user.displayName, email: res.data.user.emails[0].value});

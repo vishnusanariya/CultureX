@@ -13,7 +13,7 @@ const Upload = (props) => {
             const formData=new FormData();
             formData.append('file',file);
             formData.append('user',user.email);
-            axios.post('http://localhost:5000/media/upload',formData,{
+            axios.post('https://culture-x-server.vercel.app/media/upload',formData,{
                 headers:{
                     'Content-Type':'multipart/form-data',
                 },
