@@ -62,6 +62,9 @@ const Home = (props) => {
         Logout
       </button>
       <div className="container">
+        <div>
+      {user && <p>{user.email}</p>}
+        </div>
         <div className="upload">
           <Upload user={user} fetchData={fetchData} />
         </div>
